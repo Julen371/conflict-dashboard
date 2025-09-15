@@ -7,7 +7,7 @@ st.title("📊 Israëlisch-Palestijns Conflict Dashboard")
 st.write("Data over slachtoffers in het Israëlisch-Palestijns conflict (2000–2023).")
 
 # Data inladen
-df = pd.read_csv("fatalities_isr_pse_conflict_2000_to_2023.csv")
+df = pd.read_csv("data.csv")
 
 # Eerste check
 st.subheader("Dataset voorbeeld")
