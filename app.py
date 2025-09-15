@@ -9,6 +9,10 @@ st.write("Data over slachtoffers in het Israëlisch-Palestijns conflict (2000–
 # Data inladen
 df = pd.read_csv("data.csv")
 
+# Maak een kolom 'year' uit de datum
+df["date_of_event"] = pd.to_datetime(df["date_of_event"], errors="coerce")
+df["year"] = df["date_of_event"].dt.year
+
 # Eerste check
 st.subheader("Dataset voorbeeld")
 st.write(df.head())
