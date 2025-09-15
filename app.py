@@ -9,6 +9,23 @@ st.write("Data over slachtoffers in het Israëlisch-Palestijns conflict (2000–
 # Data inladen
 df = pd.read_csv("data.csv")
 
+# Data groeperen per jaar en citizenship
+df_year_grouped = df_year.groupby("citizenship").size().reset_index(name="fatalities")
+
+# Plot maken
+chart = (
+    alt.Chart(df_year_grouped)
+    .mark_bar()
+    .encode(
+        x="citizenship",
+        y="fatalities",
+        color="citizenship"
+    )
+)
+
+st.subheader(f"Slachtoffers in {year_selected}")
+st.altair_chart(chart, use_container_width=True)
+
 # Maak een kolom 'year' uit de datum
 df["date_of_event"] = pd.to_datetime(df["date_of_event"], errors="coerce")
 df["year"] = df["date_of_event"].dt.year
