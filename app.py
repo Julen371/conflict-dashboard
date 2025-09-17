@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import ploty.express as px
+import plotly.express as px
 
 # Titel
 st.title("🇮🇱 Israëlisch–Palestijns Conflict Dashboard")
