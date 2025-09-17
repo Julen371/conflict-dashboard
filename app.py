@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import ploty.express as px
 
 # Titel
 st.title("🇮🇱 Israëlisch–Palestijns Conflict Dashboard")
@@ -32,3 +33,25 @@ chart = (
 
 st.subheader(f"Slachtoffers in {year_selected}")
 st.altair_chart(chart, use_container_width=True)
+
+fig_line = px.line(
+    df,
+    x="year",                # jaartal
+    y="fatalities",          # aantal slachtoffers
+    color="citizenship",     # split per Israel/Palestinian
+    markers=True,            # bolletjes op de lijn
+    title="Aantal slachtoffers per jaar"
+)
+
+fig_line.show()
+
+
+
+
+
+
+
+
+
+
+
