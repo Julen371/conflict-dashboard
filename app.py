@@ -53,6 +53,48 @@ st.plotly_chart(fig_line, use_container_width=True)
 
 
 
+# Sidebar navigatie
+st.sidebar.title("Navigatie")
+page = st.sidebar.radio("Kies een pagina", ["Overview", "Alle landen", "Per continent", "Per land"])
+
+# Pagina: Overview
+if page == "Overview":
+    st.title("📊 Overzicht slachtoffers per jaar")
+    df_year = df.groupby("year").size().reset_index(name="fatalities")
+    fig = px.line(df_year, x="year", y="fatalities", markers=True, title="Totaal aantal slachtoffers per jaar")
+    st.plotly_chart(fig, use_container_width=True)
+
+# Pagina: Alle landen
+elif page == "Alle landen":
+    st.title("🌍 Slachtoffers per land")
+    df_country = df.groupby("citizenship").size().reset_index(name="fatalities")
+    fig = px.bar(df_country, x="citizenship", y="fatalities", title="Slachtoffers per land")
+    st.plotly_chart(fig, use_container_width=True)
+    st.dataframe(df_country)
+
+# Pagina: Per continent
+elif page == "Per continent":
+    st.title("🗺️ Slachtoffers per continent")
+    if "continent" in df.columns:   # alleen als je dataset dit heeft
+        df_continent = df.groupby("continent").size().reset_index(name="fatalities")
+        fig = px.pie(df_continent, values="fatalities", names="continent", title="Verdeling per continent")
+        st.plotly_chart(fig, use_container_width=True)
+        st.dataframe(df_continent)
+    else:
+        st.warning("Geen continent-kolom gevonden in dataset.")
+
+# Pagina: Per land
+elif page == "Per land":
+    st.title("🏳️ Slachtoffers per gekozen land")
+    landen = df["citizenship"].unique()
+    land = st.selectbox("Kies een land", landen)
+    df_land = df[df["citizenship"] == land].groupby("year").size().reset_index(name="fatalities")
+    fig = px.line(df_land, x="year", y="fatalities", markers=True, title=f"Slachtoffers per jaar in {land}")
+    st.plotly_chart(fig, use_container_width=True)
+    st.dataframe(df_land)
+
+
+
 
 
 
