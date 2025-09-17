@@ -5,22 +5,27 @@ import plotly.express as px
 
 # Titel
 st.title("🇮🇱 Israëlisch–Palestijns Conflict Dashboard")
-st.write("Data over slachtoffers in het Israëlisch-Palestijns conflict (2000–2023).")
+st.write("Data over slachtoffers in het Israëlsch–Palestijns conflict (2000–2023).")
 
 # Data inladen
 df = pd.read_csv("data.csv")
 
-# Maak een kolom 'year' uit de datum
+# Jaar uit datum halen
 df["year"] = pd.to_datetime(df["date_of_event"]).dt.year
 
-# Selecteer jaar
-year_selected = st.slider("Kies een jaar:", int(df["year"].min()), int(df["year"].max()), int(df["year"].max()))
-df_year = df[df["year"] == year_selected]
+# Slider voor jaarkeuze
+year_selected = st.slider(
+    "Kies een jaar:",
+    int(df["year"].min()),
+    int(df["year"].max()),
+    int(df["year"].min())
+)
 
-# Data groeperen per citizenship
+# --- Staafdiagram: slachtoffers per citizenship in gekozen jaar ---
+df_year = df[df["year"] == year_selected]
 df_year_grouped = df_year.groupby("citizenship").size().reset_index(name="fatalities")
 
-# Plot maken
+st.subheader(f"Slachtoffers in {year_selected}")
 chart = (
     alt.Chart(df_year_grouped)
     .mark_bar()
@@ -30,22 +35,21 @@ chart = (
         color="citizenship"
     )
 )
-
-st.subheader(f"Slachtoffers in {year_selected}")
 st.altair_chart(chart, use_container_width=True)
 
+# --- Lijnplot: trend door de tijd ---
+df_grouped = df.groupby(["year", "citizenship"]).size().reset_index(name="fatalities")
+
 fig_line = px.line(
-    df,
-    x="year",                # jaartal
-    y="fatalities",          # aantal slachtoffers
-    color="citizenship",     # split per Israel/Palestinian
-    markers=True,            # bolletjes op de lijn
+    df_grouped,
+    x="year",
+    y="fatalities",
+    color="citizenship",
+    markers=True,
     title="Aantal slachtoffers per jaar"
 )
 
-fig_line.show()
-
-
+st.plotly_chart(fig_line, use_container_width=True)
 
 
 
